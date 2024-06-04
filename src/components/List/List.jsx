@@ -1,18 +1,28 @@
 import { useDroppable } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import styles from "./List.module.css";
 import TaskItem from "../Task/Task";
 
-
-const List = (props) => {
-  const {isOver, setNodeRef } = useDroppable({ id: props.title });
+const TaskList = (props) => {
+  const { setNodeRef } = useDroppable({ id: props.title });
 
   return (
-    <article ref={setNodeRef} className={styles.column}>
+    <article className={styles.column}>
       <h1>{props.title}</h1>
-      <div className={styles.divider} />
-      {props.children}
-      </article>
+      <SortableContext id={props.title} items={props.tasks.map(task => task.title)} strategy={verticalListSortingStrategy}>
+        <ul ref={setNodeRef}>
+          {props.tasks.map((task) => (
+            <TaskItem
+              key={task.title}
+              title={task.title}
+              realized={task.realized}
+              handleTaskRealized={props.handleTaskRealized}
+            />
+          ))}
+        </ul>
+      </SortableContext>
+    </article>
   );
 };
 
-export default List;
+export default TaskList;

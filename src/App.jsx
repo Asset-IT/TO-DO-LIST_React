@@ -1,127 +1,149 @@
-import React, {useState} from 'react';
-import {DndContext} from '@dnd-kit/core';
-
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
+import { useState } from "react";
 import styles from "./App.module.css";
-import List from "./components/List/List"
-import Task from "./components/Task/Task"
-
-
+import TaskList from "./components/List/List";
 
 const App = () => {
-  const [parent, setParent] = useState(null);
   const [taskList, setTaskList] = useState({
-    Planned: ["Learn React", "Learn dnd-kit", "Learn Typescript"],
-    Processed: ["Learn CSS"],
-    Done: []
+    Planned: [
+      { title: "task 1", realized: false },
+      { title: "Task 2", realized: false },
+      { title: "Task 3", realized: false }
+    ],
+    Processed: [{ title: "task 4", realized: false }],
+    Done: [{ title: "task 5", realized: true }]
   });
-  const draggable = (
-    <Task title="draggable">
-      Go ahead, drag me.
-    </Task>
-  );
+
+  const [newTaskTitle, setNewTaskTitle] = useState("");
 
   const dragEndHandler = (e) => {
-    // Check if item is drag into unknown area
     if (!e.over || !e.active.data.current || !e.over.data.current) return;
-
-    // Check if item position is the same
     if (e.active.id === e.over.id) return;
-
-    // Check if item is moved outside of the column
     if (
       e.active.data.current.sortable.containerId !==
       e.over.data.current.sortable.containerId
     )
       return;
 
-    // Sort the items list order based on item target position
     const containerName = e.active.data.current.sortable.containerId;
     setTaskList((taskList) => {
       const temp = { ...taskList };
       if (!e.over) return temp;
-      const oldIdx = temp[containerName].indexOf(e.active.id.toString());
-      const newIdx = temp[containerName].indexOf(e.over.id.toString());
+      const oldIdx = temp[containerName].findIndex(
+        (task) => task.title === e.active.id
+      );
+      const newIdx = temp[containerName].findIndex(
+        (task) => task.title === e.over.id
+      );
       temp[containerName] = arrayMove(temp[containerName], oldIdx, newIdx);
       return temp;
     });
   };
 
   const dragOverHandler = (e) => {
-    // Check if item is drag into unknown area
     if (!e.over) return;
-
-    // Get the initial and target sortable list name
     const initialContainer = e.active.data.current?.sortable?.containerId;
     const targetContainer = e.over.data.current?.sortable?.containerId;
-
-    // if there are none initial sortable list name, then item is not sortable item
     if (!initialContainer) return;
 
-    // Order the item list based on target item position
     setTaskList((taskList) => {
       const temp = { ...taskList };
-
-      // If there are no target container then item is moved into a droppable zone
-      // droppable = whole area of the sortable list (works when the sortable list is empty)
       if (!targetContainer) {
-        // If item is already there then don't re-added it
-        if (taskList[e.over.id].includes(e.active.id.toString())) return temp;
-
-        // Remove item from it's initial container
+        if (taskList[e.over.id].some((task) => task.title === e.active.id))
+          return temp;
         temp[initialContainer] = temp[initialContainer].filter(
-          (task) => task !== e.active.id.toString()
+          (task) => task.title !== e.active.id
         );
-
-        // Add item to it's target container which the droppable zone belongs to
-        temp[e.over.id].push(e.active.id.toString());
-
+        temp[e.over.id].push({
+          title: e.active.id,
+          realized: false
+        });
         return temp;
       }
-
-      // If the item is drag around in the same container then just reorder the list
       if (initialContainer === targetContainer) {
-        const oldIdx = temp[initialContainer].indexOf(e.active.id.toString());
-        const newIdx = temp[initialContainer].indexOf(e.over.id.toString());
+        const oldIdx = temp[initialContainer].findIndex(
+          (task) => task.title === e.active.id
+        );
+        const newIdx = temp[initialContainer].findIndex(
+          (task) => task.title === e.over.id
+        );
         temp[initialContainer] = arrayMove(
           temp[initialContainer],
           oldIdx,
           newIdx
         );
       } else {
-        // If the item is drag into another different container
-
-        // Remove item from it's initial container
         temp[initialContainer] = temp[initialContainer].filter(
-          (task) => task !== e.active.id.toString()
+          (task) => task.title !== e.active.id
         );
-
-        // Add item to it's target container
-        const newIdx = temp[targetContainer].indexOf(e.over.id.toString());
-        temp[targetContainer].splice(newIdx, 0, e.active.id.toString());
+        const newIdx = temp[targetContainer].findIndex(
+          (task) => task.title === e.over.id
+        );
+        temp[targetContainer].splice(newIdx, 0, {
+          title: e.active.id,
+          realized: false
+        });
       }
-
       return temp;
     });
   };
 
-  function handleDragEnd({over}) {
-    setParent(over ? over.id : null);
-  }
+  const handleTaskRealized = (taskTitle) => {
+    setTaskList((taskList) => {
+      const temp = { ...taskList };
+      for (const key in temp) {
+        const task = temp[key].find((task) => task.title === taskTitle);
+        if (task) {
+          task.realized = true;
+        }
+      }
+      return temp;
+    });
+  };
+
+  const handleNewTask = () => {
+    if (newTaskTitle.trim() === "") return;
+    setTaskList((taskList) => {
+      const temp = { ...taskList };
+      temp.Planned.push({ title: newTaskTitle, realized: false });
+      return temp;
+    });
+    setNewTaskTitle("");
+  };
+
+  const pendingTasksCount = Object.values(taskList)
+    .flat()
+    .filter((task) => !task.realized).length;
 
   return (
-    // Attach the dragEnd and dragOver event listeners
-    <DndContext onDragEnd={handleDragEnd} onDragOver={dragOverHandler}>
-      {!parent ? draggable : null}
-      <main className={styles.main}>
-        <h1>Multi Sortable List</h1>
-        <section className={styles.container}>
-          {Object.keys(taskList).map((key) => (
-            <List key={key} title={key} tasks={taskList[key]}>
-              {parent === "droppable" ? draggable : 'Drop here'}
-              </List>
-          ))}
-        </section>
-      </main>
+    <DndContext
+      onDragEnd={dragEndHandler}
+      onDragOver={dragOverHandler}
+      collisionDetection={closestCenter}
+    >
+      <div className={styles.container}>
+        <div className={styles.addTaskContainer}>
+          <input
+            type="text"
+            value={newTaskTitle}
+            onChange={(e) => setNewTaskTitle(e.target.value)}
+            placeholder="Nueva tarea"
+          />
+          <button onClick={handleNewTask}>Agregar</button>
+        </div>
+        <div className={styles.pendingTasksCount}>
+          Tareas pendientes: {pendingTasksCount}
+        </div>
+        {Object.keys(taskList).map((key) => (
+          <TaskList
+            key={key}
+            title={key}
+            tasks={taskList[key]}
+            handleTaskRealized={handleTaskRealized}
+          />
+        ))}
+      </div>
     </DndContext>
   );
 };
