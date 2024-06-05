@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "start": "serve dist",
     "test": "jest",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
@@ -17,7 +18,8 @@
     "@emotion/styled": "11.11.5",
     "@mui/material": "5.15.19",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "serve": "14.2.3"
   },
   "devDependencies": {
     "@babel/core": "^7.24.6",
