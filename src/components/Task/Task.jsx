@@ -1,18 +1,14 @@
-import { useState } from "react";
-
 import { useSortable } from "@dnd-kit/sortable";
 import styles from "./task.module.css";
 import Button from "@mui/material/Button";
 import { CSS } from "@dnd-kit/utilities";
-import { ListItemText } from "@mui/material";
-import ListItem from '@mui/material/ListItem';
 
 const Task = (props) => {
   const { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({
       id: props.title,
     });
-   
+
   const handleClick = () => {
     props.handleTaskRealized(props.title);
   };
@@ -25,7 +21,7 @@ const Task = (props) => {
         transition: transition,
       }}
       >
- 
+
           <p 
             
             {...listeners}
@@ -38,7 +34,7 @@ const Task = (props) => {
           onClick={handleClick}
           variant="contained"
         >
-          <p>completed</p>
+          <p>Done</p>
         </Button>
         </div>
         
