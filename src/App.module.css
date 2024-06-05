@@ -1,17 +1,41 @@
 
 .main {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   gap: 2rem;
   padding: 2rem 4rem;
 }
 
 .container {
-  display: flex;
-  border: 2px solid black;
+  border-radius: 10px;
+  background: #e0e0e0;
+  box-shadow: inset 5px 5px 10px #8b8b8b,
+              inset -5px -5px 10px #ffffff;
   width: 75%;
-  min-height: 75vh;
   padding: 1rem;
-  justify-content: space-evenly;
+  margin: auto;
+}
+.addTaskContainer{
+  display: flex;
+  
+  
+
+}
+.pendingTasksCount{
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin-left: auto;
+  padding: 5px;
+  border-radius: 5px;
+  background: #e0e0e0;
+  box-shadow:  5px 5px 11px #a8a8a8,
+              -5px -5px 11px #ffffff;
+}
+.tablesContainer{
+  justify-content: space-between;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 40px;
+  
 }

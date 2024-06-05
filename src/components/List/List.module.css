@@ -1,22 +1,20 @@
+ul{
+    justify-content: center;
+}
 .column {
-    display: inline flex;
+    display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1rem;
-    margin:1%;
     border-radius: 20px;
+    border-radius: 10px;
     background: #e0e0e0;
-    box-shadow:  20px 20px 60px #bebebe,
-             -20px -20px 60px #ffffff;
-    
-   
-    width: 25%;
-    gap: 1rem;
+    box-shadow: 5px 5px 10px #8b8b8b, -5px -5px 10px #ffffff;
 }
 .column > h1 {
     font-size: 2rem;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: auto;
 }
-
-
+.tableContainer{
+align-items: center ;
+margin: 0 ;
+display: contents;
+}

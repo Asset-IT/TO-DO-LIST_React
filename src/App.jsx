@@ -3,6 +3,8 @@ import { arrayMove } from "@dnd-kit/sortable";
 import { useState } from "react";
 import styles from "./App.module.css";
 import TaskList from "./components/List/List";
+import TextField from '@mui/material/TextField';
+import Button from "@mui/material/Button";
 
 const App = () => {
   const [taskList, setTaskList] = useState({
@@ -124,17 +126,19 @@ const App = () => {
     >
       <div className={styles.container}>
         <div className={styles.addTaskContainer}>
-          <input
+          <TextField 
             type="text"
             value={newTaskTitle}
+            variant="outlined"
             onChange={(e) => setNewTaskTitle(e.target.value)}
-            placeholder="Nueva tarea"
+            label="Nueva tarea"
           />
-          <button onClick={handleNewTask}>Agregar</button>
-        </div>
-        <div className={styles.pendingTasksCount}>
+          <Button variant="outlined" onClick={handleNewTask}>Agregar</Button >
+          <div className={styles.pendingTasksCount}>
           Tareas pendientes: {pendingTasksCount}
         </div>
+        </div>
+        <ul className={styles.tablesContainer} >
         {Object.keys(taskList).map((key) => (
           <TaskList
             key={key}
@@ -143,6 +147,7 @@ const App = () => {
             handleTaskRealized={handleTaskRealized}
           />
         ))}
+        </ul>
       </div>
     </DndContext>
   );

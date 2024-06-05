@@ -10,7 +10,7 @@ const TaskList = (props) => {
     <article className={styles.column}>
       <h1>{props.title}</h1>
       <SortableContext id={props.title} items={props.tasks.map(task => task.title)} strategy={verticalListSortingStrategy}>
-        <ul ref={setNodeRef}>
+        <ul ref={setNodeRef} className={styles.tableContainer}>
           {props.tasks.map((task) => (
             <TaskItem
               key={task.title}

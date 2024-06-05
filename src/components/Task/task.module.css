@@ -1,12 +1,33 @@
 .listItem {
+    width: 50%;
     text-decoration:none;
+    display: flex;
+    margin: auto;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+
 }
 .listItemDisabled {
-text-decoration:line-through;
+    text-decoration:line-through;
+    width: 50%;
+    display: flex;
+    margin: auto;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
 }
 .listItem:hover {
     cursor: grab;
 }
 .listItem:active {
     cursor: grabbing;
+}
+.taskContainer{
+    display: flex;
+    margin: 10px;
+    border-radius: 5px;
+    background: #e0e0e0;
+    box-shadow:  5px 5px 11px #a8a8a8,
+                -5px -5px 11px #ffffff;
 }

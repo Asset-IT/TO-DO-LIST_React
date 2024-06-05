@@ -18,23 +18,28 @@ const Task = (props) => {
   };
 
   return (
-      <div>
+      <div className={styles.taskContainer}
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition: transition,
+      }}
+      >
+ 
+          <p 
+            
+            {...listeners}
+            {...attributes}
+            className={props.realized? styles.listItemDisabled: styles.listItem}>{props.title}
+            </p>
+
         <Button
           disabled={props.realized}
           onClick={handleClick}
           variant="contained"
-          ref={setNodeRef}
-          {...listeners}
-          {...attributes}
-          style={{
-            transform: CSS.Transform.toString(transform),
-            transition: transition,
-          }}
-          
         >
-          <p className={props.realized? styles.listItemDisabled: styles.listItem} >{props.title}</p>
+          <p>completed</p>
         </Button>
-        <p></p>
         </div>
         
   );
